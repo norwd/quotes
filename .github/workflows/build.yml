@@ -126,6 +126,26 @@ jobs:
           JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
           MARKDOWN: '"> \(.text)\n\n- \(.author)"'
 
+      - name: "Create JSON files / {lang}.json"
+        run: curl -sSL "${ENDPOINT}" | python -c "${CSV2JSON}" | jq --raw-output "${JQ_QUERY}" | xargs -ILANG sh -c "${COPY_CMD}"
+        env:
+          ENDPOINT: 'https://github.com/datasets/language-codes/raw/refs/heads/main/data/language-codes.csv'
+          JQ_QUERY: '.[].alpha2'
+          COPY_CMD: 'cp data/quotes-LANG.json LANG.json || cp data/quotes.json LANG.json'
+          CSV2JSON: |
+            import csv
+            import sys
+            import json
+
+            objects = []
+            reader = csv.DictReader(sys.stdin)
+            for row in reader:
+                obj = dict(row)
+                objects.append(obj)
+
+            arr = json.dumps(objects)
+            print(arr)
+
       - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
