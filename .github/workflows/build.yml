@@ -148,13 +148,13 @@ jobs:
           	rm -f header.html
 
           all_json: qotd.json random.json
-          	@echo Generated $^
+          	@echo Generated $@
 
-          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
-          	@echo Generated $^
+          all_html: all_json $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+          	@echo Generated $@
 
-          all_txt: $(patsubst %.md,%.txt,$(wildcard *.md */*.md */*/*.md))
-          	@echo Generated $^
+          all_txt: all_html $(patsubst %.html,%.txt,$(wildcard *.html */*.html */*/*.html))
+          	@echo Generated $@
 
           qotd.md: qotd.json
           	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< | tee $@
@@ -169,12 +169,21 @@ jobs:
           	cp $< $@
 
           %.html: %.md
-          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations --to html --standalone $< --output $@
+          	pandoc \
+          	--quiet \
+          	--standalone \
+          	--template=GitHub.html5 \
+          	--metadata-file=authors.yaml \
+          	--include-in-header=header.html \
+          	--from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations \
+          	--to html \
+          	--output $@ \
+          	$<
 
           %.txt: %.html
           	pandoc --from html --to plain --wrap=none $< --output $@
 
-          .PHONY: all all_html all_txt all_json
+          .PHONY: all all_json all_html all_txt
 
           EOF
 
