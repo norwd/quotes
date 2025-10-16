@@ -118,15 +118,15 @@ jobs:
             {{end}}
 
       - name: "Create index page"
-        run: cp README.md index.md
+        run: find . -name README.md -execdir cp --no-clobber '{}' 'index.md' \;
 
-      - name: "Create JSON files / qotd.json and random.json"
+      - name: "Create endpoints `/qotd.json` and `/random.json`"
         run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | tail --lines 1 | jq | tee qotd.json random.json | jq --raw-output "${MARKDOWN}" | tee qotd.md random.md
         env:
           JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
           MARKDOWN: '"> \(.text)\n\n- \(.author)"'
 
-      - name: "Create JSON files / {lang}.json"
+      - name: "Create endpoint `/{lang}.json`"
         run: curl -sSL "${ENDPOINT}" | python -c "${CSV2JSON}" | jq --raw-output "${JQ_QUERY}" | xargs -ILANG sh -c "${COPY_CMD}"
         env:
           ENDPOINT: 'https://github.com/datasets/language-codes/raw/refs/heads/main/data/language-codes.csv'
@@ -150,7 +150,7 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) humans.txt qotd.txt random.txt
+          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(patsubst %.md,%.txt,$(wildcard *.md */*.md */*/*.md))
           	rm -f header.html
 
           %.html: %.md
