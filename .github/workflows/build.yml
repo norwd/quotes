@@ -118,13 +118,7 @@ jobs:
             {{end}}
 
       - name: "Create index page"
-        run: find . -name README.md -execdir cp --no-clobber '{}' 'index.md' \;
-
-      - name: "Create endpoints `/qotd.json` and `/random.json`"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | tail --lines 1 | jq | tee qotd.json random.json | jq --raw-output "${MARKDOWN}" | tee qotd.md random.md
-        env:
-          JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
-          MARKDOWN: '"> \(.text)\n\n- \(.author)"'
+        run: find . -name README.md -execdir cp --update=none '{}' 'index.md' \;
 
       - name: "Create endpoint `/{lang}.json`"
         run: curl -sSL "${ENDPOINT}" | python -c "${CSV2JSON}" | jq --raw-output "${JQ_QUERY}" | xargs -ILANG sh -c "${COPY_CMD}"
@@ -150,8 +144,29 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(patsubst %.md,%.txt,$(wildcard *.md */*.md */*/*.md))
+          all: all_json all_html all_txt
           	rm -f header.html
+
+          all_json: qotd.json random.json
+          	@echo Generated $^
+
+          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)
+          	@echo Generated $^
+
+          all_txt: $(patsubst %.md,%.txt,$(wildcard *.md */*.md */*/*.md))
+          	@echo Generated $^
+
+          qotd.md: qotd.json
+          	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< | tee $@
+
+          qotd.json: data/quotes.json
+          	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq | tee $@
+
+          random.md: qotd.md
+          	cp $< $@
+
+          random.json: qotd.json
+          	cp $< $@
 
           %.html: %.md
           	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations --to html --standalone $< --output $@
@@ -159,18 +174,7 @@ jobs:
           %.txt: %.html
           	pandoc --from html --to plain --wrap=none $< --output $@
 
-          EOF
-
-      - name: "Create redirect HTML files"
-        run: |
-          make -f - << \EOF
-
-          all: $(patsubst %.redirect,%.html,$(wildcard *.redirect */*.redirect */*/*.redirect))
-          	rm -f redirect.html $(wildcard *.redirect */*.redirect */*/*.redirect)
-
-          %.html: %.redirect
-          	@echo "Generating $@..."
-          	$(file > $@, $(subst {{ .REDIRECT }},$(file < $<),$(file < redirect.html)))
+          .PHONY: all all_html all_txt all_json
 
           EOF
 
