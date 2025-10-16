@@ -117,8 +117,11 @@ jobs:
             gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{end}}
 
+      - name: "Create index page"
+        run: cp README.md index.md
+
       - name: "Create JSON files / qotd.json and random.json"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json random.json | jq --raw-output "${MARKDOWN}" | tee qotd.md random.md
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | tail --lines 1 | jq | tee qotd.json random.json | jq --raw-output "${MARKDOWN}" | tee qotd.md random.md
         env:
           JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
           MARKDOWN: '"> \(.text)\n\n- \(.author)"'
@@ -127,7 +130,7 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) humans.txt
+          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) humans.txt qotd.txt random.txt
           	rm -f header.html
 
           %.html: %.md
