@@ -150,7 +150,7 @@ jobs:
           all_json: qotd.json random.json
           	@echo Generated $^
 
-          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)
+          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
           	@echo Generated $^
 
           all_txt: $(patsubst %.md,%.txt,$(wildcard *.md */*.md */*/*.md))
