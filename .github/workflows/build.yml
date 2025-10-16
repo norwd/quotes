@@ -117,9 +117,6 @@ jobs:
             gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{end}}
 
-      - name: "Create index page"
-        run: find . -name README.md -execdir cp --update=none '{}' 'index.md' \;
-
       - name: "Create endpoint `/{lang}.json`"
         run: curl -sSL "${ENDPOINT}" | python -c "${CSV2JSON}" | jq --raw-output "${JQ_QUERY}" | xargs -ILANG sh -c "${COPY_CMD}"
         env:
@@ -140,16 +137,17 @@ jobs:
             arr = json.dumps(objects)
             print(arr)
 
-      - name: "Create generated HTML files"
+      - name: "Execute Makefile"
         run: |
           make -f - << \EOF
 
-          endpoints := qotd.json random.json
+          PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations
+          ENDPOINTS := qotd.json random.json
 
           all: all_json all_html all_txt
-          	rm -f header.html
+          	rm -f header.*
 
-          all_json: $(endpoints) $(endpoints:.json=.md) $(endpoints:.json=.txt) $(endpoints:.json=.html)
+          all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.txt)
           	@echo Generated $^
 
           all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
@@ -158,33 +156,32 @@ jobs:
           all_txt: $(patsubst %.html,%.txt,$(wildcard *.html */*.html */*/*.html))
           	@echo Generated $^
 
+          index.md: README.md
+          	@echo Generating $@...
+          	cp $< $@
+
           qotd.md: qotd.json
+          	@echo Generating $@...
           	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< | tee $@
 
           qotd.json: data/quotes.json
+          	@echo Generating $@...
           	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq | tee $@
 
           random.md: qotd.md
+          	@echo Generating $@...
           	cp $< $@
 
           random.json: qotd.json
+          	@echo Generating $@...
           	cp $< $@
 
-          PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations
-
           %.html: %.md
-          	pandoc \
-          	--quiet \
-          	--standalone \
-          	--template=GitHub.html5 \
-          	--metadata-file=authors.yaml \
-          	--include-in-header=header.html \
-          	--from $(PANDOC_FORMAT) \
-          	--to html \
-          	--output $@ \
-          	$<
+          	@echo Generating $@...
+          	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
 
           %.txt: %.html
+          	@echo Generating $@...
           	pandoc --from html --to plain --wrap=none $< --output $@
 
           .PHONY: all all_json all_html all_txt
