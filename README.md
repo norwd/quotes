@@ -47,7 +47,7 @@ however, I hope it will at least be a longer lived alternative.
 
 #### GET [`/quotes/{lang}`](https://norwd.github.io/quotes/en)
 #### GET [`/quotes/{lang}.json`](https://norwd.github.io/quotes/en.json)
-- **Description**: Retrieves quotes by language (defaults to English).
+- **Description**: Retrieves quotes by language (defaults to English if not yet translated).
 - **Example**: `/quotes/en.json`
   ```
   [
@@ -78,10 +78,10 @@ however, I hope it will at least be a longer lived alternative.
   }
   ```
 
-#### GET [`/authors`](https://norwd.github.io/quotes/authors)
-#### GET [`/authors.json`](https://norwd.github.io/quotes/authors.json)
+#### GET [`/quotes/authors`](https://norwd.github.io/quotes/authors)
+#### GET [`/quotes/authors.json`](https://norwd.github.io/quotes/authors.json)
 - **Description**: Retrieves authors.
-- **Example**: `/authors.json`
+- **Example**: `/quotes/authors.json`
   ```
   [
     "Edsger W. Dijkstra",
