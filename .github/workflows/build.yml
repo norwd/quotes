@@ -117,6 +117,12 @@ jobs:
             gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{end}}
 
+      - name: "Create JSON files / qotd.json and random.json"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json random.json | jq --raw-output "${MARKDOWN}" | tee qotd.md random.md
+        env:
+          JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
+          MARKDOWN: '"> \(.text)\n\n- \(.author)"'
+
       - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
@@ -144,11 +150,6 @@ jobs:
           	$(file > $@, $(subst {{ .REDIRECT }},$(file < $<),$(file < redirect.html)))
 
           EOF
-
-      - name: "Create JSON files / qotd.json and random.json"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json random.json
-        env:
-          JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
 
       - name: "Tidy the HTML"
         run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
