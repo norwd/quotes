@@ -145,8 +145,8 @@ jobs:
 
           EOF
 
-      - name: "Create JSON files / qotd.json"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json
+      - name: "Create JSON files / qotd.json and random.json"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json random.json
         env:
           JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
 
