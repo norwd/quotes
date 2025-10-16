@@ -2522,66 +2522,12 @@
   },
   {
     "_id": {
-      "$oid": "5a9997389128a800040c7dfd"
-    },
-    "text": "Any product that needs a manual to work is broken.",
-    "author": "Elon Musk",
-    "numberOfVotes": 1,
-    "rating": 5
-  },
-  {
-    "_id": {
       "$oid": "5a9995b89128a800040c7dfb"
     },
     "text": "The act of describing a program in unambiguous detail and the act of programming are one and the same.",
     "author": "Kevlin Henney",
     "numberOfVotes": 1,
     "rating": 4.5
-  },
-  {
-    "_id": {
-      "$oid": "5a9997929128a800040c7dfe"
-    },
-    "text": "I think you should always bear in mind that entropy is not on your side.",
-    "author": "Elon Musk",
-    "numberOfVotes": 1,
-    "rating": 4.5
-  },
-  {
-    "_id": {
-      "$oid": "5a9997d79128a800040c7dff"
-    },
-    "text": "The path to the CEO's office should not be through the CFO's office, and it should not be through the marketing department. It needs to be through engineering and design.",
-    "author": "Elon Musk",
-    "numberOfVotes": 1,
-    "rating": 4
-  },
-  {
-    "_id": {
-      "$oid": "5a9999f39128a800040c7e00"
-    },
-    "text": "People are mistaken when they think that technology just automatically improves. It does not automatically improve. It only improves if a lot of people work very hard to make it better, and actually it will, I think, by itself degrade, actually.",
-    "author": "Elon Musk",
-    "numberOfVotes": 3,
-    "rating": 4.5
-  },
-  {
-    "_id": {
-      "$oid": "5a9a9c372bad9600044b6fb4"
-    },
-    "text": "With artificial intelligence we are summoning the demon.",
-    "author": "Elon Musk",
-    "numberOfVotes": 2,
-    "rating": 4.5
-  },
-  {
-    "_id": {
-      "$oid": "5a9a9f7e2bad9600044b6fb6"
-    },
-    "text": "AI is a fundamental risk to the existence of human civilization.",
-    "author": "Elon Musk",
-    "numberOfVotes": 2,
-    "rating": 4.8
   },
   {
     "_id": {
@@ -2617,15 +2563,6 @@
     "text": "When I invented the web, I didn't have to ask anyone's permission.",
     "author": "Tim Berners-Lee",
     "numberOfVotes": 2,
-    "rating": 5
-  },
-  {
-    "_id": {
-      "$oid": "5a9aa01d2bad9600044b6fb7"
-    },
-    "text": "We need to be super careful with AI. Potentially more dangerous than nukes.",
-    "author": "Elon Musk",
-    "numberOfVotes": 1,
     "rating": 5
   },
   {
@@ -4413,15 +4350,6 @@
     "author": "Edsger W. Dijkstra",
     "numberOfVotes": 1,
     "rating": 4
-  },
-  {
-    "_id": {
-      "$oid": "5a9a9e792bad9600044b6fb5"
-    },
-    "text": "There certainly will be job disruption. Because what's going to happen is robots will be able to do everything better than us.",
-    "author": "Elon Musk",
-    "numberOfVotes": 1,
-    "rating": 5
   },
   {
     "_id": {
