@@ -108,11 +108,11 @@ jobs:
           ENDPOINT: '/repos/${{ github.repository }}/contributors'
           TEMPLATE: |
             echo "# Humans to Thank"
-            echo ""
+            echo
             echo "A huge thanks to all and colaborators who have contributed on GitHub!"
-            echo ""
+            echo
             echo "## Contributors to [{{.full_name}}]({{.html_url}})"
-            echo ""
+            echo
             {{ range . }}
             gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{ end }}
