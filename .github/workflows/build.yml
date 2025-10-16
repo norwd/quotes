@@ -114,7 +114,7 @@ jobs:
             echo "## Contributors to [{{.full_name}}]({{.html_url}})"
             echo ""
             {{ range . }}
-            gh api '/users/{{ .login }}' --jq '- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
+            gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{ end }}
 
       - name: "Create generated HTML files"
