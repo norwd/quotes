@@ -145,6 +145,11 @@ jobs:
 
           EOF
 
+      - name: "Create JSON files / qotd.json"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | sort --random-sort | head --lines 1 | jq | tee qotd.json
+        env:
+          JQ_QUERY: '.[] | { text: .text, author: .author } | tostring'
+
       - name: "Tidy the HTML"
         run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
