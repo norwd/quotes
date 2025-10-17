@@ -128,7 +128,7 @@ jobs:
           all: all_json all_html all_txt
           	rm -f header.*
 
-          all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt)
+          all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) json_by_id
           	@echo Generated $^
 
           all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
@@ -136,6 +136,9 @@ jobs:
 
           all_txt: $(patsubst %.html,%.txt,$(wildcard *.html */*.html */*/*.html))
           	@echo Generated $^
+
+          json_by_id: data/quotes-en.json
+          	jq --raw-output '.[] | { id: ._id["$oid"], text: .text, author: .author } | "echo \"" + @base64 "\({ text: .text, author: .author })" + "\" | base64 --decode | jq > \(.id).json"' $< | sh
 
           index.md: README.md
           	cp $< $@
@@ -146,10 +149,7 @@ jobs:
           qotd.json: data/quotes.json
           	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq > $@
 
-          random.md: qotd.md
-          	cp $< $@
-
-          random.json: qotd.json
+          random.%: qotd.%
           	cp $< $@
 
           $(LANG_ENDPOINTS): %.json: data/quotes-%.json
@@ -164,7 +164,7 @@ jobs:
           %.txt: %.html
           	pandoc --from html --to plain --wrap=none $< --output $@
 
-          .PHONY: all all_json all_html all_txt
+          .PHONY: all all_json all_html all_txt json_by_id
 
           EOF
 
