@@ -123,7 +123,9 @@ jobs:
 
           PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations
           LANG_ENDPOINTS := $(patsubst data/quotes-%.json,%.json,$(wildcard data/quotes-*.json))
-          ENDPOINTS := qotd.json random.json $(LANG_ENDPOINTS)
+          ARR_ENDPOINTS := $(LANG_ENDPOINTS)
+          OBJ_ENDPOINTS := qotd.json random.json
+          ENDPOINTS := $(ARR_ENDPOINTS) $(OBJ_ENDPOINTS)
 
           all: all_json all_html all_txt
           	rm -f header.*
@@ -143,9 +145,6 @@ jobs:
           index.md: README.md
           	cp $< $@
 
-          qotd.md: qotd.json
-          	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
-
           qotd.json: data/quotes.json
           	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq > $@
 
@@ -155,8 +154,11 @@ jobs:
           $(LANG_ENDPOINTS): %.json: data/quotes-%.json
           	jq --raw-output '[ .[] | { text: .text, author: .author } ]' $< > $@
 
-          $(LANG_ENDPOINTS:.json=.md): %.md: %.json
+          $(ARR_ENDPOINTS:.json=.md): %.md: %.json
           	jq --raw-output '. | group_by(.author)[] | { author: .[0].author, quotes: [ .[].text ] } | "## \(.author)\n\n> \(.quotes|join("\n\n> "))\n\n---\n"' $< > $@
+
+          $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
+          	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
           %.html: %.md
           	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
