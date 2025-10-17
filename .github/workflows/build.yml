@@ -122,13 +122,13 @@ jobs:
           make -f - << \EOF
 
           PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations
-          LANG_ENDPOINTS := en.json sr.json
+          LANG_ENDPOINTS := en.json sr.json $(wildcard data/*.md)
           ENDPOINTS := qotd.json random.json $(LANG_ENDPOINTS)
 
           all: all_json all_html all_txt
-          	rm -f header.html header.txt
+          	rm -f header.*
 
-          all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.txt)
+          all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt)
           	@echo Generated $^
 
           all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
@@ -153,10 +153,10 @@ jobs:
           	cp $< $@
 
           $(LANG_ENDPOINTS): %.json: data/quotes-%.json
-          	cp $< $@
+          	jq --raw-output '[ .[] | { text: .text, author: .author } ]' $< | tee $@
 
           $(LANG_ENDPOINTS:.json=.md): %.json: %.md
-          	touch $@
+          	jq --raw-output '. | group_by(.author)[] | { author: .[0].author, quotes: [ .[].text ] } | "## \(.author)\n\n> \(.quotes|join("\n\n> "))\n\n---\n"' $< | tee $@
 
           %.html: %.md
           	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
