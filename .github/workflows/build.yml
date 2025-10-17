@@ -144,7 +144,7 @@ jobs:
           	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< | tee $@
 
           qotd.json: data/quotes.json
-          	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq | tee $@
+          	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq > $@
 
           random.md: qotd.md
           	cp $< $@
@@ -153,10 +153,10 @@ jobs:
           	cp $< $@
 
           $(LANG_ENDPOINTS): %.json: data/quotes-%.json
-          	jq --raw-output '[ .[] | { text: .text, author: .author } ]' $< | tee $@
+          	jq --raw-output '[ .[] | { text: .text, author: .author } ]' $< > $@
 
-          $(LANG_ENDPOINTS:.json=.md): %.json: %.md
-          	jq --raw-output '. | group_by(.author)[] | { author: .[0].author, quotes: [ .[].text ] } | "## \(.author)\n\n> \(.quotes|join("\n\n> "))\n\n---\n"' $< | tee $@
+          $(LANG_ENDPOINTS:.json=.md): %.md: %.json
+          	jq --raw-output '. | group_by(.author)[] | { author: .[0].author, quotes: [ .[].text ] } | "## \(.author)\n\n> \(.quotes|join("\n\n> "))\n\n---\n"' $< > $@
 
           %.html: %.md
           	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
