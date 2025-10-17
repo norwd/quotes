@@ -155,7 +155,7 @@ jobs:
           $(LANG_ENDPOINTS): %.json: data/quotes-%.json
           	cp $< $@
 
-          $(LANG_ENDPOINTS): %.json: %.md
+          $(LANG_ENDPOINTS:.json=.md): %.json: %.md
           	touch $@
 
           %.html: %.md
