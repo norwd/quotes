@@ -19,8 +19,10 @@ instead the quotes will be accessable statically,
 with some automation to allow psuedo-querying.
 
 [^1]: That is to say, the source dataset of quotes is the same,
-      although I have removed some quotes that are inviolation of the [Code of Conduct](https://norwd.github.io/quotes/code-of-conduct):
-      - https://github.com/norwd/quotes/commit/fd851fbfeee4a26cd7d5f5a10f19601e177f86a8
+      although I have [removed some quotes][fd851fb] that are inviolation of the [Code of Conduct] and good taste.
+
+[Code of Conduct]: https://norwd.github.io/quotes/code-of-conduct
+[fd851fb]: https://github.com/norwd/quotes/commit/fd851fbfeee4a26cd7d5f5a10f19601e177f86a8
 
 For obvious reasons, the api paths will be different, so this is *not* a drop in replacement for the original,
 however, I hope it will at least be a longer lived alternative.
