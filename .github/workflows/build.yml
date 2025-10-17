@@ -138,7 +138,7 @@ jobs:
           	@echo Generated $^
 
           json_by_id: data/quotes-en.json
-          	jq --raw-output '.[] | { id: ._id["$oid"], text: .text, author: .author } | "echo \"" + @base64 "\({ text: .text, author: .author })" + "\" | base64 --decode | jq > \(.id).json"' $< | sh -v
+          	jq --raw-output '.[] | { id: ._id["$$oid"], text: .text, author: .author } | "echo \"" + @base64 "\({ text: .text, author: .author })" + "\" | base64 --decode | jq > \(.id).json"' $< | sh -v
 
           index.md: README.md
           	cp $< $@
