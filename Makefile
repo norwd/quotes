@@ -5,14 +5,14 @@ include *.mk
 all: all_json all_html
 	rm -f header.*
 
-all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) json_by_id
+all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) $(OID_ENDPOINTS) # $(OID_ENDPOINTS:.json=.md) $(OID_ENDPOINTS:.json=.html) $(OID_ENDPOINTS:.json=.txt)
 	@echo Generated $^
 
 all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
 	@echo Generated $^
 
-json_by_id: data/quotes-en.json
-	jq --raw-output '.[] | { id: ._id["$$oid"], text: .text, author: .author } | "echo \"" + @base64 "\({ text: .text, author: .author })" + "\" | base64 --decode | jq > \(.id).json"' $< | sh
+$(OID_ENDPOINTS): %.json : data/quotes-en.json
+	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
 
 index.md: README.md
 	cp $< $@
@@ -39,3 +39,4 @@ $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	pandoc --from html --to plain --wrap=none $< --output $@
 
 .PHONY: all all_json all_html json_by_id
+
