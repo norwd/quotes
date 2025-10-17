@@ -2,10 +2,13 @@
 
 include *.mk
 
+# ensure this is (re)evaluated last
+include config.mk
+
 all: all_json all_html
 	rm -f header.*
 
-all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) $(OID_ENDPOINTS) # $(OID_ENDPOINTS:.json=.md) $(OID_ENDPOINTS:.json=.html) $(OID_ENDPOINTS:.json=.txt)
+all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) $(OID_ENDPOINTS) $(OID_ENDPOINTS:.json=.md) $(OID_ENDPOINTS:.json=.html) $(OID_ENDPOINTS:.json=.txt)
 	@echo Generated $^
 
 all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
@@ -32,11 +35,11 @@ $(ARR_ENDPOINTS:.json=.md): %.md: %.json
 $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
-%.html: %.md
+%.html: %.md authors.yaml header.html
 	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
 
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
 
-.PHONY: all all_json all_html json_by_id
+.PHONY: all all_json all_html
 
