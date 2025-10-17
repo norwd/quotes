@@ -20,6 +20,12 @@ $(OID_ENDPOINTS): %.json : data/quotes-en.json
 index.md: README.md
 	cp $< $@
 
+authors.yaml:
+	@echo "---" > $@
+	@echo "author-meta:" >> $@
+	git authors --list | awk '{print "  - " $0}' >> $@
+	@echo "..." >> $@
+
 qotd.json: data/quotes.json
 	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq > $@
 

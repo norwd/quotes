@@ -56,12 +56,6 @@ jobs:
           JQ_PROPS: 'tagName'
           JQ_QUERY: '"tag_name=" + (.tagName | tostring)'
 
-      - name: "Generate an authors.yaml file"
-        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
-        env:
-          ENDPOINT: '/repos/${{ github.repository }}/contributors'
-          JQ_QUERY: '"author-meta:" + (["", (.[] | .login)] | join("\n- "))'
-
       - name: "Generate a changelog.md file"
         run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | tee changelog.md
         env:
