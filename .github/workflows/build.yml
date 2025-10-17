@@ -122,7 +122,7 @@ jobs:
           make -f - << \EOF
 
           PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations
-          LANG_ENDPOINTS := en.json sr.json $(wildcard data/*.md)
+          LANG_ENDPOINTS := $(patsubst data/quotes-%.json,%.json,$(wildcard data/quotes-*.json))
           ENDPOINTS := qotd.json random.json $(LANG_ENDPOINTS)
 
           all: all_json all_html all_txt
@@ -131,7 +131,7 @@ jobs:
           all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt)
           	@echo Generated $^
 
-          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+          all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
           	@echo Generated $^
 
           all_txt: $(patsubst %.html,%.txt,$(wildcard *.html */*.html */*/*.html))
@@ -141,7 +141,7 @@ jobs:
           	cp $< $@
 
           qotd.md: qotd.json
-          	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< | tee $@
+          	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
           qotd.json: data/quotes.json
           	jq --raw-output '.[] | { text: .text, author: .author } | tostring' $< | sort --random-sort | tail --lines 1 | jq > $@
