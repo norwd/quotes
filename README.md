@@ -27,7 +27,7 @@ with some automation to allow psuedo-querying.
 For obvious reasons, the api paths will be different, so this is *not* a drop in replacement for the original,
 however, I hope it will at least be a longer lived alternative.
 
-### Public Routes  
+### Public Routes
 
 #### GET [`/quotes/qotd`](https://norwd.github.io/quotes/qotd)
 #### GET [`/quotes/qotd.json`](https://norwd.github.io/quotes/qotd.json)
@@ -97,9 +97,9 @@ however, I hope it will at least be a longer lived alternative.
   ]
   ```
 
-#### GET [`/quotes/{author}.json`](https://norwd.github.io/quotes/Edsger_W._Dijkstra.json)
+#### GET [`/quotes/{author}.json`](https://norwd.github.io/quotes/Edsger_W_Dijkstra.json)
 - **Description**: Retrieves quotes by author.
-- **Example**: `/quotes/Edsger_W._Dijkstra.json`
+- **Example**: `/quotes/Edsger_W_Dijkstra.json`
   ```
   [
     {
