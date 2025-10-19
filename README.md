@@ -10,13 +10,12 @@ Feel free to get involved, suggest or implement new features.
 
 ## API Documentation
 
-The original implementation was writen in JavaScript and hosted in Azure.
-As of 2025/10/16, the site is unreachable, and the project seems otherwise abandonded.
+The original implementation was written in JavaScript and hosted in Azure.
+As of 2025/10/16, the site is unreachable, and the project seems otherwise abandoned.
 My goal here is to instead host the *same exact*[^1] quotes statically using GitHub Pages.
 Due to how GitHub Pages work, the JavaScript cannot be executed server side,
-and as such I've removed it,
-instead the quotes will be accessable statically,
-with some automation to allow psuedo-querying.
+and as such I've removed it, instead the quotes will be accessible statically,
+with some automation to allow pseudo-querying.
 
 [^1]: That is to say, the source dataset of quotes is the same,
       although I have [removed some quotes][fd851fb] that are in violation of the [Code of Conduct] and good taste.
