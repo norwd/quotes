@@ -97,6 +97,7 @@ however, I hope it will at least be a longer lived alternative.
   ]
   ```
 
+#### GET [`/quotes/{author}`](https://norwd.github.io/quotes/Edsger_W_Dijkstra)
 #### GET [`/quotes/{author}.json`](https://norwd.github.io/quotes/Edsger_W_Dijkstra.json)
 - **Description**: Retrieves quotes by author.
 - **Example**: `/quotes/Edsger_W_Dijkstra.json`
