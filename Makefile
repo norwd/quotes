@@ -6,13 +6,10 @@ include *.mk
 include config.mk
 
 all: all_json all_html
-	rm -f header.*
 
 all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt) $(OID_ENDPOINTS) $(OID_ENDPOINTS:.json=.md) $(OID_ENDPOINTS:.json=.html) $(OID_ENDPOINTS:.json=.txt)
-	@echo Generated $^
 
 all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
-	@echo Generated $^
 
 $(OID_ENDPOINTS): %.json : data/quotes-en.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
@@ -40,6 +37,13 @@ $(ARR_ENDPOINTS:.json=.md): %.md: %.json
 
 $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
+
+authors.json: data/quotes.json
+	jq '[ . | group_by(.author)[] | { id: "\( .[0].author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") )", author: .[0].author, count: . | length } ]' $< > $@
+
+authors.md: %.md : %.json
+	@echo "# Quote Authors" > $@
+	jq --raw-output '.[] | "- [Quotes by \(.author)](./\(.id))"' $< >> $@
 
 %.html: %.md authors.yaml src/header.html
 	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
