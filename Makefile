@@ -23,7 +23,7 @@ index.md: README.md
 authors.yaml:
 	@echo "---" > $@
 	@echo "author-meta:" >> $@
-	git authors --list | awk '{ print "  - " $$0 }' >> $@
+	git authors --list | awk '{ print "  - " $$0 }' | tee -a $@
 	@echo "..." >> $@
 
 qotd.json: data/quotes.json
