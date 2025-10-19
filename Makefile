@@ -11,6 +11,20 @@ all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOIN
 
 all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
 
+clean:
+	rm -f $(ENDPOINTS)
+	rm -f $(ENDPOINTS:.json=.md)
+	rm -f $(ENDPOINTS:.json=.html)
+	rm -f $(ENDPOINTS:.json=.txt)
+	rm -f $(OID_ENDPOINTS)
+	rm -f $(OID_ENDPOINTS:.json=.md)
+	rm -f $(OID_ENDPOINTS:.json=.html)
+	rm -f $(OID_ENDPOINTS:.json=.txt)
+	rm -f authors.txt authors.html authors.md authors.json
+	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+	rm -f index.txt index.html index.md
+	rm -f authors.yaml
+
 $(OID_ENDPOINTS): %.json : data/quotes-en.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
 
@@ -51,5 +65,5 @@ authors.md: %.md : %.json
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
 
-.PHONY: all all_json all_html
+.PHONY: all all_json all_html clean
 
