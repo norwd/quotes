@@ -41,8 +41,8 @@ $(ARR_ENDPOINTS:.json=.md): %.md: %.json
 $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
-%.html: %.md authors.yaml header.html
-	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
+%.html: %.md authors.yaml src/header.html
+	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
 
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
