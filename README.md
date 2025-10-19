@@ -19,7 +19,7 @@ instead the quotes will be accessable statically,
 with some automation to allow psuedo-querying.
 
 [^1]: That is to say, the source dataset of quotes is the same,
-      although I have [removed some quotes][fd851fb] that are inviolation of the [Code of Conduct] and good taste.
+      although I have [removed some quotes][fd851fb] that are in violation of the [Code of Conduct] and good taste.
 
 [Code of Conduct]: https://norwd.github.io/quotes/code-of-conduct
 [fd851fb]: https://github.com/norwd/quotes/commit/fd851fbfeee4a26cd7d5f5a10f19601e177f86a8
