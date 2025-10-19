@@ -123,7 +123,7 @@ jobs:
         run: make
 
       - name: "Tidy the HTML"
-        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+        run: find . -name '*.html' | xargs --verbose tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
       - name: "Archive Pages Artifact"
         uses: actions/upload-artifact@v4
