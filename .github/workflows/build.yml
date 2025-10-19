@@ -114,10 +114,15 @@ jobs:
             gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
             {{end}}
 
-      - name: "Generate additional make configs"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes-en.json | tee OID_ENDPOINTS.mk
+      - name: "Generate additional make configs for /quotes/{id} endpoints"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
         env:
           JQ_QUERY: '.[]._id["$oid"] | "OID_ENDPOINTS := $(OID_ENDPOINTS) \(.).json"'
+
+      - name: "Generate additional make configs for /quotes/{author} endpoints"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee AUTH_ENDPOINTS.mk
+        env:
+          JQ_QUERY: 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ).json"'
 
       - name: "Execute Makefile"
         run: make
