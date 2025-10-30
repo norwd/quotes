@@ -25,7 +25,7 @@ $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
 
 $(AUTH_ENDPOINTS): %.json : data/quotes.json
-	jq --raw-output '[ .[] | select( ( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ) == "$*" ) | { text: .text, author: .author } ]' $< > $@
+	jq --raw-output '[ .[] | select( ( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ) == "$*" ) | { text: .text, author: .author, id: ._id["$$oid"] } ]' $< > $@
 
 index.md: README.md
 	cp $< $@
