@@ -9,10 +9,6 @@ concurrency:
   group: heartbeat
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: bash
-
 on:
   workflow_dispatch:
   push: {paths: [.github/workflows/heartbeat.yml]}
