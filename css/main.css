@@ -1,0 +1,26 @@
+.serif {
+  font-family: Times, "Times New Roman", Georgia, serif;
+}
+
+.sansserif {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.monospace {
+  font-family: "Lucida Console", Courier, monospace;
+}
+
+* {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.container {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item {
+  width: 10em;
+}

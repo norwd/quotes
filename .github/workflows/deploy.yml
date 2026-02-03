@@ -1,0 +1,99 @@
+name: "Deploy GitHub Pages"
+run-name: "Deploy GitHub Pages"
+
+on:
+
+  schedule:
+    - cron: '0 5/12 * * *'
+
+  push:
+    branches: [main,master]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    name: "Build GitHub Pages"
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    if: github.ref_name == 'main' || github.ref_name == 'master'
+    name: "Deploy GitHub Pages"
+    needs: build
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: configure-pages
+        name: "Setup Pages"
+        uses: actions/configure-pages@v5
+
+      - name: "Setup Environment"
+        run: |
+          tee "${GITHUB_ENV}" << EOF
+          BASE_URL=${{ steps.configure-pages.outputs.base_url }}
+          PAGES_ORIGIN=${{ steps.configure-pages.outputs.origin }}
+          PAGES_HOST=${{ steps.configure-pages.outputs.host }}
+          BASE_PATH=${{ steps.configure-pages.outputs.base_path }}
+          EOF
+
+      - name: "Unarchive Pages Artifact"
+        uses: actions/download-artifact@v5
+        with:
+          name: pages
+
+      - name: "Generate a security.txt file"
+        run: |
+          tee security.txt << EOF
+          Contact: ${BASE_URL}/contact
+          Policy: ${BASE_URL}/security/policy
+          Acknowledgments: ${BASE_URL}/humans
+          Canonical: ${BASE_URL}/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
+      - name: "Generate a robots.txt file"
+        run: |
+          tee robots.txt << EOF
+          # Block AI Crawlers (see: https://github.com/ai-robots-txt)
+          $(gh release download --repo ai-robots-txt/ai.robots.txt --pattern 'robots.txt' --output -)
+
+          # List of pages and files
+          Sitemap: ${BASE_URL}/sitemap.txt
+          EOF
+
+      - name: "Generate a version.txt file"
+        run: |
+          tee version.txt << EOF
+          Deployed: $(date --universal +'%FT%TZ')
+          Version: v0.0.${{ github.run_number }}.$((${{ github.run_attempt }} - 1))
+          Source: ${{ github.server_url }}/${{ github.repository }}/tree/$(echo "${{ github.sha }}" | head -c 7)
+          EOF
+
+      - name: "Generate a sitemap.txt file"
+        run: |
+          touch sitemap.txt # this ensures that the sitemap detects itself
+          find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee -a sitemap.txt
+
+      - name: "Create a Pages Artifact"
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: "Deploy Pages"
+        uses: actions/deploy-pages@v4
