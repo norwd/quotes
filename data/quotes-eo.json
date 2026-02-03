@@ -1,7 +1,47 @@
 [
   {
-    "text": "Komputila Scienco estas tiel pri komputiloj kiel astronomio estas pri teleskopoj",
+    "text": "Komputila Scienco temas tiel pri komputiloj kiel astronomio temas pri teleskopoj",
     "author": "Edsger W. Dijkstra",
     "id": "5a6ce86e2af929789500e7e4"
+  },
+  {
+    "text": "Simpleco estas antaŭkondiĉo de fidindeco.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86e2af929789500e7d7"
+  },
+  {
+    "text": "La ĉefa malfacilaĵo de la komputisto estas ne konfuziĝi per la kompleksaĵoj de sia propra farado.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86d2af929789500e7ca"
+  },
+  {
+    "text": "Se sencimigado estas la procezo por forigi programaraj cimoj, tiam programado devas esti la procezo por enmeti ilin.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86f2af929789500e7f3"
+  },
+  {
+    "text": "Programo estas kvazaŭ poemo: vi ne povas verki poemo sen verki ĝin. Tamen oni parolas pri programado kvazaŭ ĝi estus produktada procezo kaj mezuras „produktiveco de programistoj“ laŭ „nombro da linioj de kodo produktitaj“. Tiel farante oni metas tiun nombron sur la malĝusta flanko de la ĉeflibro: Ni devas ĉiam referenci al „la nombro da linioj de kodo elspezitaj“.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86e2af929789500e7d9"
+  },
+  {
+    "text": "La iloj, kiujn ni uzas, havas profundan kaj ruzan influon al niaj penskutimoj, kaj do al niaj penskapabloj.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86f2af929789500e7f9"
+  },
+  {
+    "text": "Kiel ni konvinkas homojn, ke en programado, simpleco kaj klareco — mallonge: tio kio matematikistoj nomas \"elegantecon\" — ne estas lukso, kiu oni povas malhavigi, sed estas decida afero inter sukceso kaj fiasko?",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce86f2af929789500e7f5"
+  },
+  {
+    "text": "Testado povas esti tre efika metodo por montri la ĉeeston de cimoj, sed ĝi estas sensepere neadekvata por montri ilia foresto.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce8702af929789500e860"
+  },
+  {
+    "text": "La kompetenta programisto plene konscias pri la strikte limigita grandeco de lia propra kranio; tial li entreprenas la programadan taskon plene de humileco, kaj inter aliaj aferoj li evitas lertajn trukojn kiel la pesto.",
+    "author": "Edsger W. Dijkstra",
+    "id": "5a6ce8702af929789500e8bc"
   }
 ]
