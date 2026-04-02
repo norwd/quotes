@@ -1,0 +1,144 @@
+name: "Build GitHub Pages"
+run-name: "Build GitHub Pages"
+
+on:
+  workflow_call:
+  push:
+    branches-ignore: [main,master]
+
+permissions:
+  contents: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: "Install tools"
+        run: sudo apt install tidy pandoc git-extras
+
+      - name: "Install templates"
+        run: |
+          mkdir -p ~/.pandoc/templates
+          curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
+
+      - name: "Retrieve Code of Conduct"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output code-of-conduct.md "${CONTENTS_ENDPOINT}/CODE_OF_CONDUCT.md"
+        env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - name: "Retrieve Security Policy"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output security/policy.md "${CONTENTS_ENDPOINT}/SECURITY.md"
+        env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - name: "Retrieve Contribution Guidlines"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output contributing.md "${CONTENTS_ENDPOINT}/CONTRIBUTING.md"
+        env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - id: latest-release
+        name: "Get Details of Latest Release"
+        run: gh release view --json "${JQ_PROPS}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
+        env:
+          GH_REPO: '${{ github.repository }}'
+          JQ_PROPS: 'tagName'
+          JQ_QUERY: '"tag_name=" + (.tagName | tostring)'
+
+      - name: "Generate a changelog.md file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | tee changelog.md
+        env:
+          ENDPOINT: '/repos/${{ github.repository }}/releases'
+          TEMPLATE: |
+            ---
+            lang: en
+            title: Changelog
+            ...
+
+            {{ range . -}}
+
+            ## [{{.name}}]({{ .html_url }})
+
+            {{- if .draft -}}
+            {{ " " }}![This is a draft release.](https://img.shields.io/badge/DRAFT-grey)
+            {{- else if .prerelease -}}
+            {{ " " }}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
+            {{- else if eq .tag_name "${{ steps.latest-release.outputs.tag_name }}" -}}
+            {{ " " }}![This is the latest release.](https://img.shields.io/badge/LATEST-green)
+            {{- end }}
+
+            {{ .body }}
+
+            {{ if .assets -}}
+
+            ### Asset Downloads
+
+            {{- "\n" -}}
+
+            {{ range .assets }}
+            - [{{ or .label .name }}]({{ .browser_download_url }})
+            {{- end }}
+
+            {{ end }}
+
+            {{- end }}
+
+            {{- /* noop */ -}}
+
+      - name: "Generate a humans.md file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.md
+        env:
+          ENDPOINT: '/repos/${{ github.repository }}/contributors'
+          TEMPLATE: |
+            echo "# Humans to Thank"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed on GitHub!"
+            echo
+            echo "## Contributors to [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})"
+            echo
+            {{range .}}
+            gh api '/users/{{ .login }}' --jq '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
+            {{end}}
+
+      - name: "Generate additional make configs for /quotes/{id} endpoints"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
+        env:
+          JQ_QUERY: '.[]._id["$oid"] | "OID_ENDPOINTS := $(OID_ENDPOINTS) \(.).json"'
+
+      - name: "Generate additional make configs for /quotes/{author} endpoints"
+        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee AUTH_ENDPOINTS.mk
+        env:
+          JQ_QUERY: 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ).json"'
+
+      - name: "Execute Makefile"
+        run: make
+
+      - name: "Tidy the HTML"
+        run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+
+      - name: "Archive Pages Artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages
+          path: |
+            .
+            !CNAME
+            !Makefile
+            !*.mk
+            !.nojekyll
+            !.git*/**
+            !src/**
