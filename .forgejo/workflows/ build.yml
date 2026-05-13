@@ -1,0 +1,23 @@
+name: "Build CodeBerg Pages"
+run-name: "Build CodeBerg Pages"
+
+on:
+  workflow_call:
+  push:
+    branches-ignore: [main,master]
+
+permissions:
+  contents: read
+
+env:
+  GH_TOKEN: ${{ forgejo.token }}
+
+jobs:
+  build:
+    runs-on: codeberg-tiny
+    steps:
+
+      - name: "Checkout"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
