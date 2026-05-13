@@ -23,11 +23,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Install tools"
-        run: sudo apt install tidy pandoc git-extras
+      #- name: "Install tools"
+      #  run: sudo apt install tidy pandoc git-extras
 
       - name: "Execute Makefile"
         run: make
 
-      - name: "Tidy the HTML"
-        run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+      #- name: "Tidy the HTML"
+      #  run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
