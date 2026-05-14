@@ -33,8 +33,24 @@ jobs:
           mkdir -p ~/.pandoc/templates
           curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
 
+      - run: ls
+
       - name: "Execute Makefile"
         run: make
 
-      #- name: "Tidy the HTML"
-      #  run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+      - run: ls
+
+      - name: "Tidy the HTML"
+        run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+
+      - name: "Exclude files from pages"
+        run: >
+          rm -rf
+            CNAME
+            Makefile
+            *.mk
+            .nojekyll
+            .git*/**
+            src/**
+
+      - run: ls
