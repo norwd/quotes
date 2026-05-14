@@ -24,7 +24,10 @@ jobs:
           fetch-depth: 0
 
       - name: "Install tools"
-        run: sudo apt install pandoc # tidy pandoc git-extras
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+          # sudo apt install pandoc # tidy pandoc git-extras
 
       - name: "Execute Makefile"
         run: make
