@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    runs-on: codeberg-tiny
+    runs-on: codeberg-small
     steps:
 
       - name: "Checkout"
