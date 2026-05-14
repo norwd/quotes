@@ -44,12 +44,6 @@ jobs:
         run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
       - name: "Exclude files from pages"
-        run: >
-          rm -rf
-            Makefile
-            *.mk
-            .nojekyll
-            .git*/**
-            src/**
+        run: rm -rf Makefile *.mk .nojekyll .git*/** src/**
 
       - run: ls
