@@ -60,8 +60,8 @@ authors.md: %.md : %.json
 
 %.html: %.md authors.yaml src/header.html
 	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
-    mkdir -p $(patsubst %.html,%,$@)
-    cp $@ $(patsubst %.html,%,$@)/index.html
+	mkdir -p $(patsubst %.html,%,$@)
+	cp $@ $(patsubst %.html,%,$@)/index.html
 
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
