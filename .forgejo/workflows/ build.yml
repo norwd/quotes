@@ -41,7 +41,7 @@ jobs:
       - name: "Generate additional make configs for /quotes/{author} endpoints"
         run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee AUTH_ENDPOINTS.mk
         env:
-          JQ_QUERY: 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("[^a-zA-Z]+\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ).json"'
+          JQ_QUERY: 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"'
 
       - name: "Execute Makefile"
         timeout-minutes: 5
