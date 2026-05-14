@@ -2,9 +2,9 @@
 
 **Programming Quotes API for open source projects.**
 
-Visit: [norwd.github.io/quotes](https://norwd.github.io/quotes)
+Visit: [norwd.codeberg.page/quotes](https://norwd.codeberg.page/quotes)
 
-Github repo: [github.com/norwd/quotes](https://github.com/norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
+RRepo: [github.com/norwd/quotes](https://codeberg.org//norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
 
 Feel free to get involved, suggest or implement new features.
 
@@ -20,16 +20,16 @@ with some automation to allow pseudo-querying.
 [^1]: That is to say, the source dataset of quotes is the same,
       although I have [removed some quotes][fd851fb] that are in violation of the [Code of Conduct] and good taste.
 
-[Code of Conduct]: https://norwd.github.io/quotes/code-of-conduct
-[fd851fb]: https://github.com/norwd/quotes/commit/fd851fbfeee4a26cd7d5f5a10f19601e177f86a8
+[Code of Conduct]: https://norwd.codeberg.page/quotes/code-of-conduct
+[fd851fb]: https://codeberg.org/norwd/quotes/commit/fd851fbfeee4a26cd7d5f5a10f19601e177f86a8
 
 For obvious reasons, the api paths will be different, so this is *not* a drop in replacement for the original,
 however, I hope it will at least be a longer lived alternative.
 
 ### Public Routes
 
-#### GET [`/quotes/qotd`](https://norwd.github.io/quotes/qotd)
-#### GET [`/quotes/qotd.json`](https://norwd.github.io/quotes/qotd.json)
+#### GET [`/quotes/qotd`](https://norwd.codeberg.page/quotes/qotd)
+#### GET [`/quotes/qotd.json`](https://norwd.codeberg.page/quotes/qotd.json)
 - **Description**: Fetches programming quote of the day.
 - **Example**: `/quotes/qotd.json`
   ```
@@ -39,8 +39,8 @@ however, I hope it will at least be a longer lived alternative.
   }
   ```
 
-#### GET [`/quotes/random`](https://norwd.github.io/quotes/random)
-#### GET [`/quotes/random.json`](https://norwd.github.io/quotes/random.json)
+#### GET [`/quotes/random`](https://norwd.codeberg.page/quotes/random)
+#### GET [`/quotes/random.json`](https://norwd.codeberg.page/quotes/random.json)
 - **Description**: ~~Fetches a random programming quote~~. This is currently an alias of `/quotes/qotd`.
 - **Example**: `/quotes/random.json`
   ```
@@ -50,8 +50,8 @@ however, I hope it will at least be a longer lived alternative.
   }
   ```
 
-#### GET [`/quotes/{lang}`](https://norwd.github.io/quotes/en)
-#### GET [`/quotes/{lang}.json`](https://norwd.github.io/quotes/en.json)
+#### GET [`/quotes/{lang}`](https://norwd.codeberg.page/quotes/en)
+#### GET [`/quotes/{lang}.json`](https://norwd.codeberg.page/quotes/en.json)
 - **Description**: Retrieves quotes by language (defaults to English if not yet translated).
 - **Example**: `/quotes/en.json`
   ```
@@ -72,8 +72,8 @@ however, I hope it will at least be a longer lived alternative.
   ]
   ```
 
-#### GET [`/quotes/{id}`](https://norwd.github.io/quotes/5a6ce86e2af929789500e7d7)
-#### GET [`/quotes/{id}.json`](https://norwd.github.io/quotes/5a6ce86e2af929789500e7d7.json)
+#### GET [`/quotes/{id}`](https://norwd.codeberg.page/quotes/5a6ce86e2af929789500e7d7)
+#### GET [`/quotes/{id}.json`](https://norwd.codeberg.page/quotes/5a6ce86e2af929789500e7d7.json)
 - **Description**: Retrieves a single quote by its unique ID.
 - **Example**: `/quotes/5a6ce86e2af929789500e7d7.json`
   ```
@@ -83,8 +83,8 @@ however, I hope it will at least be a longer lived alternative.
   }
   ```
 
-#### GET [`/quotes/authors`](https://norwd.github.io/quotes/authors)
-#### GET [`/quotes/authors.json`](https://norwd.github.io/quotes/authors.json)
+#### GET [`/quotes/authors`](https://norwd.codeberg.page/quotes/authors)
+#### GET [`/quotes/authors.json`](https://norwd.codeberg.page/quotes/authors.json)
 - **Description**: Retrieves authors.
 - **Example**: `/quotes/authors.json`
   ```
@@ -96,8 +96,8 @@ however, I hope it will at least be a longer lived alternative.
   ]
   ```
 
-#### GET [`/quotes/{author}`](https://norwd.github.io/quotes/Edsger_W_Dijkstra)
-#### GET [`/quotes/{author}.json`](https://norwd.github.io/quotes/Edsger_W_Dijkstra.json)
+#### GET [`/quotes/{author}`](https://norwd.codeberg.page/quotes/Edsger_W_Dijkstra)
+#### GET [`/quotes/{author}.json`](https://norwd.codeberg.page/quotes/Edsger_W_Dijkstra.json)
 - **Description**: Retrieves quotes by author.
 - **Example**: `/quotes/Edsger_W_Dijkstra.json`
   ```
