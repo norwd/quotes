@@ -33,17 +33,18 @@ jobs:
           mkdir -p ~/.pandoc/templates
           curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
 
-      - run: ls
-
       - name: "Execute Makefile"
         run: make
-
-      - run: ls
 
       - name: "Tidy the HTML"
         run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
-      - name: "Exclude files from pages"
+      - name: "Exclude Files"
         run: rm -rf Makefile *.mk .nojekyll .git*/** src/**
 
-      - run: ls
+      - name: "Deploy Pages"
+        uses: https://codeberg.org/git-pages/action@v2
+        with:
+          site: https://${{ forge.repository_owner }}.codeberg.page/quotes/
+          token: ${{ forge.token }}
+          source: .
