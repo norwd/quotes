@@ -4,7 +4,7 @@
 
 Visit: [norwd.codeberg.page/quotes](https://norwd.codeberg.page/quotes)
 
-RRepo: [github.com/norwd/quotes](https://codeberg.org//norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
+Repo: [codeberg.org/norwd/quotes](https://codeberg.org//norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
 
 Feel free to get involved, suggest or implement new features.
 
