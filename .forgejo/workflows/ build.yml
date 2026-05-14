@@ -25,9 +25,13 @@ jobs:
 
       - name: "Install tools"
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc
-          # sudo apt install pandoc # tidy pandoc git-extras
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y tidy pandoc git-extras
+
+      - name: "Install templates"
+        run: |
+          mkdir -p ~/.pandoc/templates
+          curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
 
       - name: "Execute Makefile"
         run: make
