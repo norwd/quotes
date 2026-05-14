@@ -46,7 +46,6 @@ jobs:
       - name: "Exclude files from pages"
         run: >
           rm -rf
-            CNAME
             Makefile
             *.mk
             .nojekyll
