@@ -2,7 +2,8 @@ PANDOC_FORMAT := markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_a
 LANG_ENDPOINTS := $(patsubst data/quotes-%.json,%.json,$(wildcard data/quotes-*.json))
 ARR_ENDPOINTS := $(AUTH_ENDPOINTS) $(LANG_ENDPOINTS)
 OBJ_ENDPOINTS := $(OID_ENDPOINTS) qotd.json random.json
-ENDPOINTS := $(ARR_ENDPOINTS) $(OBJ_ENDPOINTS) authors.json
+JSON_ENDPOINTS := $(ARR_ENDPOINTS) $(OBJ_ENDPOINTS) authors.json
 MARKDOWN_ENDPOINTS := $(ENDPOINTS:.json=.md)
 HTML_ENDPOINTS := $(ENDPOINTS:.json=.html)
 TXT_ENDPOINTS := $(ENDPOINTS:.json=.txt)
+ENDPOINTS := $(JSON_ENDPOINTS) $(MARKDOWN_ENDPOINTS) $(HTML_ENDPOINTS) $(TXT_ENDPOINTS)
