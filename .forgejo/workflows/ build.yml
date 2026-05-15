@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    runs-on: codeberg-small
+    runs-on: codeberg-small-lazy
     steps:
 
       - name: "Checkout"
