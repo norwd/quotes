@@ -9,7 +9,7 @@ all: all_json all_html
 
 all_json: $(ENDPOINTS)
 
-all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(wildcard index.html */index.html */*/index.html)
+all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(patsubst %.html,%/index.html,$(HTML_ENDPOINTS)) index.html
 
 clean:
 	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
