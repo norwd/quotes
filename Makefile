@@ -52,7 +52,7 @@ $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
 authors.json: data/quotes.json
-	jq '[ . | group_by(.author)[] | { id: "\( .[0].author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") )", author: .[0].author, count: . | length } ]' $< > $@
+	jq '[ . | group_by(.author)[] | { id: "\( .[0].author | gsub("[^a-zA-Z]+\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") )", author: .[0].author, count: . | length } ]' $< > $@
 
 authors.md: %.md : %.json
 	@echo "# Quote Authors" > $@
