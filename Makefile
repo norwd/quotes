@@ -58,10 +58,12 @@ authors.md: %.md : %.json
 	@echo "# Quote Authors" > $@
 	jq --raw-output '.[] | "- [Quotes by \(.author)](./\(.id))"' $< >> $@
 
-%.html: %.md authors.yaml src/header.html
+%/index.html: %.md authors.yaml src/header.html
+	mkdir -p $(patsubst %/index.html,%,$@)
 	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
-	mkdir -p $(patsubst %.html,%,$@)
-	cp $@ $(patsubst %.html,%,$@)/index.html
+
+%.html: %/index.html
+	cp $< $@
 
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
