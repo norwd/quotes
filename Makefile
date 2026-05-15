@@ -7,9 +7,9 @@ include config.mk
 
 all: all_json all_html
 
-all_json: $(ENDPOINTS) $(ENDPOINTS:.json=.md) $(ENDPOINTS:.json=.html) $(ENDPOINTS:.json=.txt)
+all_json: $(ENDPOINTS)
 
-all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) index.html
+all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(wildcard index.html */index.html */*/index.html)
 
 clean:
 	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
