@@ -22,7 +22,7 @@ clean:
 	rm -f authors.txt authors.html authors.md authors.json
 	rm -f index.txt index.html index.md
 	rm -f authors.yaml
-    rm -f sitemap.txt
+	rm -f sitemap.txt
 
 sitemap.txt:
 	find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee $@
