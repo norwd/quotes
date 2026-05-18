@@ -47,28 +47,26 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
 contact.md:
+	echo "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
 	cat $@
 
 code-of-conduct.md:
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
-	cat $@
 
 security/policy.md:
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
-	cat $@
 
 contributing.md: 
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
-	cat $@
 
 humans.md:
-	echo "# Humans to Thank" | tee $@
-	echo | tee $@
+	echo "# Humans to Thank" > $@
+	echo >> $@
 	echo "A huge thanks to all and colaborators who have contributed on GitHub!" | tee $@
-	echo | tee $@
+	echo >> $@
 	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee $@
-	echo | tee $@
+	echo >> $@
 	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | xargs -IHUMAN printf '- %s\n' HUMAN  | tee -a $@
 
 CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md SUPPORT.md:
