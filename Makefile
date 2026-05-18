@@ -25,28 +25,37 @@ clean:
 	rm -f sitemap.txt
 
 sitemap.txt: $(ENDPOINTS)
-	find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee $@
+	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | sort --unique | tee $@
 
 version.txt:
-	echo "Deployed: $(date --universal +'%FT%TZ')" | tee $@
-	echo "Version: v0.1.${FORGEJO_RUN_NUMBER:-0}.$((${FORGEJO_RUN_ATTEMPT:-1} - 1))" | tee -a $@
-	echo "Source: ${FORGEJO_SERVER_URL}/${FORGEJO_REPOSITORY}/src/commit/$(echo "${FORGEJO_SHA:-$(git log --pretty=%H --max-count=1)}" | head -c 7)" | tee -a $@
+	echo "Deployed: $$(date --universal +'%FT%TZ')" | tee $@
+	echo "Version: v0.1.$${FORGEJO_RUN_NUMBER:-0}.$$(($${FORGEJO_RUN_ATTEMPT:-1} - 1))" | tee -a $@
+	echo "Source: $${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY}/src/commit/$$(echo "$${FORGEJO_SHA:-$$(git log --pretty=%H --max-count=1)}" | head -c 7)" | tee -a $@
 
 robots.txt:
 	echo "# Block AI Crawlers (see: https://github.com/ai-robots-txt)" | tee $@
 	curl -sSL --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
 	echo "" | tee -a $@
 	echo "# List of pages and files" | tee -a $@
-	echo "Sitemap: ${BASE_URL}/sitemap.txt" | tee -a $@
+	echo "Sitemap: $${BASE_URL}/sitemap.txt" | tee -a $@
 
 security.txt: contact.txt security/policy.txt humans.txt
-	echo "Contact: ${BASE_URL}/contact" | tee $@
-	echo "Policy: ${BASE_URL}/security/policy" | tee -a $@
-	echo "Acknowledgments: ${BASE_URL}/humans" | tee -a $@
-	echo "Canonical: ${BASE_URL}/security.txt" | tee -a $@
-	echo "Expires: $(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
+	echo "Contact: $${BASE_URL}/contact" | tee $@
+	echo "Policy: $${BASE_URL}/security/policy" | tee -a $@
+	echo "Acknowledgments: $${BASE_URL}/humans" | tee -a $@
+	echo "Canonical: $${BASE_URL}/security.txt" | tee -a $@
+	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
 contact.md: SUPPORT.md
+	cp $< $@
+
+code-of-conduct.md: CODE_OF_CONDUCT.md
+	cp $< $@
+
+security/policy.md: SECURITY.md
+	cp $< $@
+
+contributing.md: CONTRIBUTING.md
 	cp $< $@
 
 humans.md:
@@ -54,12 +63,12 @@ humans.md:
 	echo | tee $@
 	echo "A huge thanks to all and colaborators who have contributed on GitHub!" | tee $@
 	echo | tee $@
-	echo "## Contributors to [${FORGEJO_REPOSITORY}](${FORGEJO_SERVER_URL}/${FORGEJO_REPOSITORY})" | tee $@
+	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee $@
 	echo | tee $@
 	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | xargs -IHUMAN printf '- %s\n' HUMAN  | tee -a $@
 
 CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md SUPPORT.md:
-	curl -sSLO https://codeberg.org/norwd/.profile/raw/branch/main/$@
+	curl -sSLO "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/$@"
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
