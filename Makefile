@@ -46,10 +46,10 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Canonical: ${BASE_URL}/security.txt" | tee -a $@
 	echo "Expires: $(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
-contact.md: CONTACT.md
+contact.md: SUPPORT.md
 	cp $< $@
 
-CODE_OF_CONDUCT.md CONTACT.md CONTRIBUTING.md SECURITY.md:
+CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md SUPPORT.md:
 	curl -sSLO https://codeberg.org/norwd/.profile/raw/branch/main/$@
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
