@@ -48,7 +48,7 @@ jobs:
 
       - name: "Execute Makefile"
         timeout-minutes: 5
-        run: make # -j 16
+        run: make -j 16
 
       - name: "Tidy the HTML"
         run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs --verbose -IFILE tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify FILE
