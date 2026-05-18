@@ -33,11 +33,11 @@ version.txt:
 	echo "Source: $${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY}/src/commit/$$(echo "$${FORGEJO_SHA:-$$(git log --pretty=%H --max-count=1)}" | head -c 7)" | tee -a $@
 
 robots.txt:
-	echo "# Block AI Crawlers (see: https://github.com/ai-robots-txt)" | tee $@
+	echo "# Block AI Crawlers (see: https://github.com/ai-robots-txt)" > $@
 	curl -sSL --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
-	echo "" | tee -a $@
-	echo "# List of pages and files" | tee -a $@
-	echo "Sitemap: $${BASE_URL}/sitemap.txt" | tee -a $@
+	echo "" >> $@
+	echo "# List of pages and files" >> $@
+	echo "Sitemap: $${BASE_URL}/sitemap.txt" >> $@
 
 security.txt: contact.txt security/policy.txt humans.txt
 	echo "Contact: $${BASE_URL}/contact" | tee $@
@@ -47,16 +47,16 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
 contact.md:
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
+	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md" | tee $@
 
 code-of-conduct.md:
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
+	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md" | tee $@
 
 security/policy.md:
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
+	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md" | tee $@
 
 contributing.md: 
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
+	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md" | tee $@
 
 humans.md:
 	echo "# Humans to Thank" | tee $@
