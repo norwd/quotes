@@ -48,19 +48,19 @@ security.txt: contact.txt security/policy.txt humans.txt
 
 contact.md:
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
-    cat $@
+	cat $@
 
 code-of-conduct.md:
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
-    cat $@
+	cat $@
 
 security/policy.md:
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
-    cat $@
+	cat $@
 
 contributing.md: 
 	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
-    cat $@
+	cat $@
 
 humans.md:
 	echo "# Humans to Thank" | tee $@
