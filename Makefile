@@ -25,7 +25,7 @@ clean:
 	rm -f sitemap.txt
 
 sitemap.txt: $(ENDPOINTS)
-	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | sort --unique | tee $@
+	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | sort --unique | tee $@
 
 version.txt:
 	echo "Deployed: $$(date --universal +'%FT%TZ')" | tee $@
@@ -116,5 +116,7 @@ authors.md: %.md : %.json
 
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
+
+.PRECIOUS: %.html
 
 .PHONY: all all_json all_html clean
