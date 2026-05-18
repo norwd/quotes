@@ -92,7 +92,7 @@ jobs:
           tee version.txt << EOF
           Deployed: $(date --universal +'%FT%TZ')
           Version: v0.1.${{ forgejo.run_number }}.$((${{ forgejo.run_attempt }} - 1))
-          Source: ${{ forgejo.server_url }}/${{ forgejoforgejo.repository }}/tree/$(echo "${{ forgejo.sha }}" | head -c 7)
+          Source: ${{ forgejo.server_url }}/${{ forgejo.repository }}/tree/$(echo "${{ forgejo.sha }}" | head -c 7)
           EOF
 
       - name: "Generate a sitemap.txt file"
