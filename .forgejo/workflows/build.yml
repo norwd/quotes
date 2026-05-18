@@ -49,7 +49,7 @@ jobs:
         run: make -j 16
 
       - name: "Tidy the HTML"
-        run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+        run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs --verbose tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
       - name: "Exclude Files"
         run: rm -rf Makefile *.mk .nojekyll .git*/** src/**
