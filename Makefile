@@ -49,6 +49,15 @@ security.txt: contact.txt security/policy.txt humans.txt
 contact.md: SUPPORT.md
 	cp $< $@
 
+humans.md:
+	echo "# Humans to Thank" | tee $@
+	echo | tee $@
+	echo "A huge thanks to all and colaborators who have contributed on GitHub!" | tee $@
+	echo | tee $@
+	echo "## Contributors to [${FORGEJO_REPOSITORY}](${FORGEJO_SERVER_URL}/${FORGEJO_REPOSITORY})" | tee $@
+	echo | tee $@
+	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | xargs -IHUMAN printf '- %s\n' HUMAN  | tee -a $@
+
 CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md SUPPORT.md:
 	curl -sSLO https://codeberg.org/norwd/.profile/raw/branch/main/$@
 
