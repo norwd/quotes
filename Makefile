@@ -46,17 +46,17 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Canonical: $${BASE_URL}/security.txt" | tee -a $@
 	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
-contact.md: SUPPORT.md
-	cp $< $@
+contact.md:
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
 
-code-of-conduct.md: CODE_OF_CONDUCT.md
-	cp $< $@
+code-of-conduct.md:
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
 
-security/policy.md: SECURITY.md
-	cp $< $@
+security/policy.md:
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
 
-contributing.md: CONTRIBUTING.md
-	cp $< $@
+contributing.md: 
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
 
 humans.md:
 	echo "# Humans to Thank" | tee $@
