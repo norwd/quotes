@@ -11,7 +11,7 @@ all_json: $(ENDPOINTS)
 
 all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(patsubst %.html,%/index.html,$(HTML_ENDPOINTS)) index.html
 
-all_meta: sitemap.txt version.txt robots.txt security.txt
+all_meta: code-of-conduct.txt contributing.txt robots.txt security.txt sitemap.txt version.txt
 
 clean:
 	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
@@ -34,7 +34,7 @@ version.txt:
 
 robots.txt:
 	echo "# Block AI Crawlers (see: https://github.com/ai-robots-txt)" > $@
-	curl -sSL --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
+	curl -sSL --fail --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
 	echo "" >> $@
 	echo "# List of pages and files" >> $@
 	echo "Sitemap: $${BASE_URL}/sitemap.txt" >> $@
@@ -47,18 +47,16 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
 contact.md:
-	echo "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
-	cat $@
+	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
 
 code-of-conduct.md:
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
+	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
 
 security/policy.md:
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
+	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
 
 contributing.md: 
-	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
+	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
 
 humans.md:
 	echo "# Humans to Thank" > $@
@@ -68,9 +66,6 @@ humans.md:
 	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee $@
 	echo >> $@
 	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | xargs -IHUMAN printf '- %s\n' HUMAN  | tee -a $@
-
-CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md SUPPORT.md:
-	curl -sSLO "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/$@"
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
