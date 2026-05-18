@@ -81,9 +81,11 @@ jobs:
 
       - name: "Generate a robots.txt file"
         run: |
-          curl -sSL --create-dirs --output robots.txt https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt
           tee -a robots.txt << EOF
+          # Block AI Crawlers (see: https://github.com/ai-robots-txt)
+          $(curl -sSL --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt)
 
+          # List of pages and files
           Sitemap: ${BASE_URL}/sitemap.txt
           EOF
 
