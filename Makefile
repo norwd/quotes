@@ -117,6 +117,6 @@ authors.md: %.md : %.json
 %.txt: %.html
 	pandoc --from html --to plain --wrap=none $< --output $@
 
-.PRECIOUS: %.html
+.PRECIOUS: %.html %/index.html
 
 .PHONY: all all_json all_html clean
