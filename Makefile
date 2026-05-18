@@ -24,7 +24,7 @@ clean:
 	rm -f authors.yaml
 	rm -f sitemap.txt
 
-sitemap.txt:
+sitemap.txt: $(ENDPOINTS)
 	find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee $@
 
 version.txt:
