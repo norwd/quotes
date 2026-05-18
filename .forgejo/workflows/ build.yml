@@ -12,6 +12,7 @@ permissions:
 
 env:
   GH_TOKEN: ${{ forgejo.token }}
+  BASE_URL: https://${{ forge.repository_owner }}.codeberg.page/quotes
 
 jobs:
   build:
@@ -29,24 +30,24 @@ jobs:
           sudo apt-get install -qq -y tidy pandoc git-extras
 
       - name: "Install templates"
-        run: |
-          mkdir -p ~/.pandoc/templates
-          curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
+        run: curl -sSL --create-dirs --output ~/.pandoc/templates/GitHub.html5 "${ENDPOINT}"
+        env:
+          ENDPOINT: https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5
 
       - name: "Retrieve Code of Conduct"
-        run: curl -sSL --create-dirs --output code-of-conduct.md "${ENDPOINT}/CODE_OF_CONDUCT.md"
+        run: curl -sSL --create-dirs --output code-of-conduct.md "${ENDPOINT}"
         env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/CODE_OF_CONDUCT.md
 
       - name: "Retrieve Security Policy"
-        run: curl -sSL --create-dirs --output security/policy.md "${ENDPOINT}/SECURITY.md"
+        run: curl -sSL --create-dirs --output security/policy.md "${ENDPOINT}"
         env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/SECURITY.md
 
       - name: "Retrieve Contribution Guidlines"
-        run: curl -sSL --create-dirs --output contributing.md "${ENDPOINT}/CONTRIBUTING.md"
+        run: curl -sSL --create-dirs --output contributing.md "${ENDPOINT}"
         env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/CONTRIBUTING.md
 
       - name: "Generate additional make configs for /quotes/{id} endpoints"
         run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
@@ -68,9 +69,14 @@ jobs:
       - name: "Exclude Files"
         run: rm -rf Makefile *.mk .nojekyll .git*/** src/**
 
+      - name: "Generate a sitemap.txt file"
+        run: |
+          touch sitemap.txt # this ensures that the sitemap detects itself
+          find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee -a sitemap.txt
+
       - name: "Deploy Pages"
         uses: https://codeberg.org/git-pages/action@v2
         with:
-          site: https://${{ forge.repository_owner }}.codeberg.page/quotes/
+          site: ${{ env.BASE_URL }}
           token: ${{ forge.token }}
           source: .
