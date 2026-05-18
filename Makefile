@@ -47,16 +47,20 @@ security.txt: contact.txt security/policy.txt humans.txt
 	echo "Expires: $$(date -u +"%Y-12-31T23:59:59.999Z")" | tee -a $@
 
 contact.md:
-	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md" | tee $@
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
+    cat $@
 
 code-of-conduct.md:
-	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md" | tee $@
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
+    cat $@
 
 security/policy.md:
-	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md" | tee $@
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SECURITY.md"
+    cat $@
 
 contributing.md: 
-	curl -sSL --create-dirs --output - "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md" | tee $@
+	curl -sSL --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CONTRIBUTING.md"
+    cat $@
 
 humans.md:
 	echo "# Humans to Thank" | tee $@
