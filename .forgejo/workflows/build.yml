@@ -34,21 +34,6 @@ jobs:
         env:
           ENDPOINT: https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5
 
-      - name: "Retrieve Code of Conduct"
-        run: curl -sSL --create-dirs --output code-of-conduct.md "${ENDPOINT}"
-        env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/CODE_OF_CONDUCT.md
-
-      - name: "Retrieve Security Policy"
-        run: curl -sSL --create-dirs --output security/policy.md "${ENDPOINT}"
-        env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/SECURITY.md
-
-      - name: "Retrieve Contribution Guidlines"
-        run: curl -sSL --create-dirs --output contributing.md "${ENDPOINT}"
-        env:
-          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main/CONTRIBUTING.md
-
       - name: "Generate additional make configs for /quotes/{id} endpoints"
         run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
         env:
