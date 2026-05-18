@@ -34,19 +34,19 @@ jobs:
           curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
 
       - name: "Retrieve Code of Conduct"
-        run: curl --create-dirs --output code-of-conduct.md "${ENDPOINT}/CODE_OF_CONDUCT.md"
+        run: curl -sSL --create-dirs --output code-of-conduct.md "${ENDPOINT}/CODE_OF_CONDUCT.md"
         env:
-          ENDPOINTS: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
 
       - name: "Retrieve Security Policy"
-        run: curl --create-dirs --output security/policy.md "${ENDPOINT}/SECURITY.md"
+        run: curl -sSL --create-dirs --output security/policy.md "${ENDPOINT}/SECURITY.md"
         env:
-          ENDPOINTS: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
 
       - name: "Retrieve Contribution Guidlines"
-        run: curl --output contributing.md "${ENDPOINT}/CONTRIBUTING.md"
+        run: curl -sSL --create-dirs --output contributing.md "${ENDPOINT}/CONTRIBUTING.md"
         env:
-          ENDPOINTS: https://codeberg.org/norwd/.profile/raw/branch/main
+          ENDPOINT: https://codeberg.org/norwd/.profile/raw/branch/main
 
       - name: "Generate additional make configs for /quotes/{id} endpoints"
         run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
