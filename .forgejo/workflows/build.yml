@@ -12,7 +12,7 @@ permissions:
 
 env:
   GH_TOKEN: ${{ forgejo.token }}
-  BASE_URL: https://${{ forge.repository_owner }}.codeberg.page/quotes
+  BASE_URL: https://${{ forgejo.repository_owner }}.codeberg.page/quotes
 
 jobs:
   build:
@@ -69,6 +69,35 @@ jobs:
       - name: "Exclude Files"
         run: rm -rf Makefile *.mk .nojekyll .git*/** src/**
 
+      - name: "Generate a security.txt file"
+        run: |
+          tee security.txt << EOF
+          Contact: ${BASE_URL}/contact
+          Policy: ${BASE_URL}/security/policy
+          Acknowledgments: ${BASE_URL}/humans
+          Canonical: ${BASE_URL}/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
+      - name: "Generate a robots.txt file"
+        run: |
+          tee robots.txt << EOF
+          # Block AI Crawlers
+          # See: https://github.com/ai-robots-txt
+          $(curl -sSL --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt)
+
+          # List of pages and files
+          Sitemap: ${BASE_URL}/sitemap.txt
+          EOF
+
+      - name: "Generate a version.txt file"
+        run: |
+          tee version.txt << EOF
+          Deployed: $(date --universal +'%FT%TZ')
+          Version: v0.1.${{ forgejo.run_number }}.$((${{ forgejo.run_attempt }} - 1))
+          Source: ${{ forgejo.server_url }}/${{ forgejoforgejo.repository }}/tree/$(echo "${{ forgejo.sha }}" | head -c 7)
+          EOF
+
       - name: "Generate a sitemap.txt file"
         run: |
           touch sitemap.txt # this ensures that the sitemap detects itself
@@ -78,5 +107,5 @@ jobs:
         uses: https://codeberg.org/git-pages/action@v2
         with:
           site: ${{ env.BASE_URL }}
-          token: ${{ forge.token }}
+          token: ${{ forgejo.token }}
           source: .
