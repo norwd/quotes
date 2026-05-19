@@ -71,7 +71,7 @@ index.md: README.md
 authors.yaml:
 	@echo "---" > $@
 	@echo "author-meta:" >> $@
-	git authors --list | awk '{ print "  - " $$0 }' | tee -a $@
+	git log --pretty='%aN' | sort --unique | grep -v '\[bot\]' | awk '{ print "  - " $$0 }' | tee -a $@
 	@echo "..." >> $@
 
 qotd.json: data/quotes.json
