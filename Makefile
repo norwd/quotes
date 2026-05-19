@@ -50,7 +50,7 @@ contact.md:
 	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/SUPPORT.md"
 
 code-of-conduct.md:
-	curl 'https://codeberg.org/api/v1/repos/norwd/.profile/contents/CODE_OF_CONDUCT.md' | jq --raw-output '.' # '@base64d "\(.content)"' | tee -a $@
+	curl 'https://codeberg.org/api/v1/repos/norwd/.profile/contents/CODE_OF_CONDUCT.md' # | jq --raw-output '.' # '@base64d "\(.content)"' | tee -a $@
 	git archive --remote=git://git.foo.com/project.git HEAD:path/to/directory filename | tar -xO | tee -a $@
 	curl -sSL --fail --create-dirs --output code-of-conduct.md 'https://codeberg.org/norwd/.profile/raw/branch/main/CODE_OF_CONDUCT.md'
 	curl -sSL --fail --create-dirs --output $@ "$${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY_OWNER}/.profile/raw/branch/main/CODE_OF_CONDUCT.md"
