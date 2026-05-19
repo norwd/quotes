@@ -66,7 +66,7 @@ humans.md:
 	echo >> $@
 	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee $@
 	echo >> $@
-	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
+	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
@@ -80,7 +80,7 @@ index.md: README.md
 authors.yaml:
 	@echo "---" > $@
 	@echo "author-meta:" >> $@
-	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
+	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 	@echo "..." >> $@
 
 qotd.json: data/quotes.json
@@ -108,7 +108,6 @@ authors.md: %.md : %.json
 %/index.html: %.md authors.yaml src/header.html
 	mkdir -p $(patsubst %/index.html,%,$@)
 	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
-	cat $@
 
 %.html: %/index.html
 	cp $< $@
