@@ -5,20 +5,10 @@ include *.mk
 # ensure this is (re)evaluated last
 include config.mk
 
-all: all_json all_html all_meta
-
-all_json: $(ENDPOINTS)
-
-all_html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) $(patsubst %.html,%/index.html,$(HTML_ENDPOINTS)) index.html
-
-all_meta: code-of-conduct.txt contributing.txt robots.txt security.txt sitemap.txt version.txt authors.yaml
+all: $(ENDPOINTS) code-of-conduct.txt contributing.txt robots.txt security.txt sitemap.txt version.txt authors.yaml
 
 clean:
 	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
-	rm -f $(JSON_ENDPOINTS)
-	rm -f $(MARKDOWN_ENDPOINTS)
-	rm -f $(HTML_ENDPOINTS)
-	rm -f $(TXT_ENDPOINTS)
 	rm -f $(ENDPOINTS)
 	rm -f authors.txt authors.html authors.md authors.json
 	rm -f index.txt index.html index.md
@@ -118,4 +108,4 @@ authors.md: %.md : %.json
 
 .PRECIOUS: %.html %/index.html
 
-.PHONY: all all_json all_html clean
+.PHONY: all clean
