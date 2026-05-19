@@ -34,21 +34,9 @@ jobs:
         env:
           ENDPOINT: https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5
 
-      - if: false
-        name: "Generate additional make configs for /quotes/{id} endpoints"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee OID_ENDPOINTS.mk
-        env:
-          JQ_QUERY: '.[]._id["$oid"] | "OID_ENDPOINTS := $(OID_ENDPOINTS) \(.).json"'
-
-      - if: false
-        name: "Generate additional make configs for /quotes/{author} endpoints"
-        run: jq --raw-output "${JQ_QUERY}" data/quotes.json | tee AUTH_ENDPOINTS.mk
-        env:
-          JQ_QUERY: 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"'
-
       - name: "Execute Makefile"
         timeout-minutes: 5
-        run: make #-j 16
+        run: make -j 16
 
       - name: "Tidy the HTML"
         run: find . -name '*.html' -not -path './.git*/*' -not -path './src*/*' | xargs --verbose -IFILE tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify FILE
