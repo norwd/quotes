@@ -1,9 +1,7 @@
 #!/usr/bin/env -S make -f
 
-include *.mk
-
+include OID_ENDPOINTS.mk
 include AUTH_ENDPOINTS.mk
-
 # ensure this is (re)evaluated last
 include config.mk
 
@@ -16,6 +14,9 @@ clean:
 	rm -f index.txt index.html index.md
 	rm -f authors.yaml
 	rm -f sitemap.txt
+
+OID_ENDPOINTS.mk: data/quotes.json
+	jq --raw-output '.[]._id["$$oid"] | "OID_ENDPOINTS := $$(OID_ENDPOINTS) \(.).json"' $< | tee $@
 
 AUTH_ENDPOINTS.mk: data/quotes.json
 	jq --raw-output 'unique_by(.author)[] | "AUTH_ENDPOINTS := $$(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"' $< | tee $@
@@ -30,7 +31,7 @@ version.txt:
 
 robots.txt:
 	echo "# Block AI Crawlers (see: https://github.com/ai-robots-txt)" > $@
-	curl -sSL --fail --create-dirs --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
+	curl -sSL --fail --output - https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt | tee -a $@
 	echo "" >> $@
 	echo "# List of pages and files" >> $@
 	echo "Sitemap: $${BASE_URL}/sitemap.txt" >> $@
