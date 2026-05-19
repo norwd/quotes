@@ -25,7 +25,7 @@ clean:
 	rm -f sitemap.txt
 
 sitemap.txt: $(ENDPOINTS)
-	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | sort --unique | tee $@
+	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | grep -v '.*\.mk' | grep -v 'Makefile' | sort --unique | tee $@
 
 version.txt:
 	echo "Deployed: $$(date --universal +'%FT%TZ')" | tee $@
