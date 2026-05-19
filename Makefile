@@ -25,7 +25,7 @@ clean:
 	rm -f sitemap.txt
 
 sitemap.txt: $(ENDPOINTS)
-	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | grep -v '.*\.mk' | grep -v 'Makefile' | sort --unique | tee $@
+	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | grep -v '.*\.mk' | grep -v 'Makefile' | grep -v '/src/' | sort --unique | tee $@
 
 version.txt:
 	echo "Deployed: $$(date --universal +'%FT%TZ')" | tee $@
@@ -66,7 +66,7 @@ humans.md:
 	echo >> $@
 	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee $@
 	echo >> $@
-	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | xargs -IHUMAN printf '- %s\n' HUMAN  | tee -a $@
+	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
@@ -80,7 +80,7 @@ index.md: README.md
 authors.yaml:
 	@echo "---" > $@
 	@echo "author-meta:" >> $@
-	git authors --list | awk '{ print "  - " $$0 }' | tee -a $@
+	git log --pretty='%aN <%aE>' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 	@echo "..." >> $@
 
 qotd.json: data/quotes.json
