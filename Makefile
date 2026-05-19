@@ -2,6 +2,8 @@
 
 include *.mk
 
+include AUTH_ENDPOINTS.mk
+
 # ensure this is (re)evaluated last
 include config.mk
 
@@ -14,6 +16,9 @@ clean:
 	rm -f index.txt index.html index.md
 	rm -f authors.yaml
 	rm -f sitemap.txt
+
+AUTH_ENDPOINTS.mk: data/quotes.json
+	jq --raw-output 'unique_by(.author)[] | "AUTH_ENDPOINTS := $(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"' $< | tee $@
 
 sitemap.txt: $(ENDPOINTS)
 	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | grep -v '.*\.mk' | grep -v 'Makefile' | grep -v '/src/' | sort --unique | tee $@
