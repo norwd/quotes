@@ -53,6 +53,7 @@ code-of-conduct.md: CODE_OF_CONDUCT.md
 	cp $< $@
 
 security/policy.md: SECURITY.md
+	mkdir -p "$$(dirname $@)"
 	cp $< $@
 
 contributing.md: CONTRIBUTING.md
