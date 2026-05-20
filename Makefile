@@ -72,7 +72,7 @@ changelog.md:
 	echo "title: Changelog" >> $@
 	echo "..." >> $@
 	echo >> $@
-	curl 'https://$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases' | jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' | tee -a $@
+	curl -sSL --fail --output - '$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases' | jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' | tee -a $@
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
