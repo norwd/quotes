@@ -67,7 +67,7 @@ changelog.md:
 	echo >> $@
 	curl -H 'accept: application/json' --fail --output - "$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases" | jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' | tee -a $@
 
-index.md: README.md
+index.md: .forgejo/README.md
 	cp $< $@
 
 authors.yaml:
