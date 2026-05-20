@@ -5,6 +5,6 @@ OBJ_ENDPOINTS := $(OID_ENDPOINTS) qotd.json random.json
 JSON_ENDPOINTS := $(ARR_ENDPOINTS) $(OBJ_ENDPOINTS) authors.json
 MARKDOWN_ENDPOINTS := $(JSON_ENDPOINTS:.json=.md) $(wildcard *.md */*.md */*/*.md)
 HTML_ENDPOINTS := $(MARKDOWN_ENDPOINTS:.md=.html) $(patsubst %.md,%/index.html,$(MARKDOWN_ENDPOINTS)) index.html
-TXT_ENDPOINTS := $(MARKDOWN_ENDPOINTS:.md=.txt) code-of-conduct.txt contributing.txt
+TXT_ENDPOINTS := $(MARKDOWN_ENDPOINTS:.md=.txt) code-of-conduct.txt contributing.txt changelog.txt
 META_ENDPOINTS := authors.yaml robots.txt security.txt sitemap.txt version.txt
 ENDPOINTS := $(JSON_ENDPOINTS) $(MARKDOWN_ENDPOINTS) $(HTML_ENDPOINTS) $(TXT_ENDPOINTS) $(META_ENDPOINTS)
