@@ -2,8 +2,7 @@
 
 include OID_ENDPOINTS.mk
 include AUTH_ENDPOINTS.mk
-# ensure this is (re)evaluated last
-include config.mk
+include config.mk # ensure this is (re)evaluated last
 
 all: sitemap.txt
 
@@ -14,12 +13,6 @@ clean:
 	rm -f index.txt index.html index.md
 	rm -f authors.yaml
 	rm -f sitemap.txt
-
-OID_ENDPOINTS.mk: data/quotes.json
-	jq --raw-output '.[]._id["$$oid"] | "OID_ENDPOINTS := $$(OID_ENDPOINTS) \(.).json"' $< | tee $@
-
-AUTH_ENDPOINTS.mk: data/quotes.json
-	jq --raw-output 'unique_by(.author)[] | "AUTH_ENDPOINTS := $$(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"' $< | tee $@
 
 sitemap.txt: $(ENDPOINTS)
 	find . -type f -printf "$${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$$//g' | grep -v '/index$$' | grep -v '/\.' | grep -v '.*\.mk' | grep -v 'Makefile' | grep -v '/src/' | sort --unique | tee $@
@@ -65,23 +58,14 @@ humans.md:
 	echo >> $@
 	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
-releases.json:
-	curl -X 'GET' -H 'accept: application/json' --fail --output $@ "$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases"
-
-changelog.md: releases.json
+changelog.md:
 	echo "" > $@
 	echo "---" >> $@
 	echo "lang: en" >> $@
 	echo "title: Changelog" >> $@
 	echo "..." >> $@
 	echo >> $@
-	jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' $< | tee -a $@
-
-$(OID_ENDPOINTS): %.json : data/quotes.json
-	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
-
-$(AUTH_ENDPOINTS): %.json : data/quotes.json
-	jq --raw-output '[ .[] | select( ( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ) == "$*" ) | { text: .text, author: .author, id: ._id["$$oid"] } ]' $< > $@
+	curl -H 'accept: application/json' --fail --output - "$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases" | jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' | tee -a $@
 
 index.md: README.md
 	cp $< $@
@@ -98,6 +82,29 @@ qotd.json: data/quotes.json
 random.%: qotd.%
 	cp $< $@
 
+authors.json: data/quotes.json
+	jq '[ . | group_by(.author)[] | { id: "\( .[0].author | gsub("[^a-zA-Z]+\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") )", author: .[0].author, count: . | length } ]' $< > $@
+
+authors.md: %.md : %.json
+	@echo "# Quote Authors" > $@
+	jq --raw-output '.[] | "- [Quotes by \(.author)](./\(.id))"' $< >> $@
+
+%.txt: %.html
+	pandoc --from html --to plain --wrap=none $< --output $@
+
+%.html: %/index.html
+	cp $< $@
+
+%/index.html: %.md authors.yaml src/header.html
+	mkdir -p $(patsubst %/index.html,%,$@)
+	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
+
+$(OID_ENDPOINTS): %.json : data/quotes.json
+	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
+
+$(AUTH_ENDPOINTS): %.json : data/quotes.json
+	jq --raw-output '[ .[] | select( ( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") ) == "$*" ) | { text: .text, author: .author, id: ._id["$$oid"] } ]' $< > $@
+
 $(LANG_ENDPOINTS): %.json: data/quotes-%.json
 	jq --raw-output '[ .[] | { text: .text, author: .author } ]' $< > $@
 
@@ -107,22 +114,11 @@ $(ARR_ENDPOINTS:.json=.md): %.md: %.json
 $(OBJ_ENDPOINTS:.json=.md): %.md: %.json
 	jq --raw-output '"> \(.text)\n\n- \(.author)"' $< > $@
 
-authors.json: data/quotes.json
-	jq '[ . | group_by(.author)[] | { id: "\( .[0].author | gsub("[^a-zA-Z]+\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") )", author: .[0].author, count: . | length } ]' $< > $@
+OID_ENDPOINTS.mk: data/quotes.json
+	jq --raw-output '.[]._id["$$oid"] | "OID_ENDPOINTS := $$(OID_ENDPOINTS) \(.).json"' $< | tee $@
 
-authors.md: %.md : %.json
-	@echo "# Quote Authors" > $@
-	jq --raw-output '.[] | "- [Quotes by \(.author)](./\(.id))"' $< >> $@
-
-%/index.html: %.md authors.yaml src/header.html
-	mkdir -p $(patsubst %/index.html,%,$@)
-	pandoc --quiet --standalone --template=GitHub.html5 --metadata-file=authors.yaml --include-in-header=src/header.html --from $(PANDOC_FORMAT) --to html --output $@ $<
-
-%.html: %/index.html
-	cp $< $@
-
-%.txt: %.html
-	pandoc --from html --to plain --wrap=none $< --output $@
+AUTH_ENDPOINTS.mk: data/quotes.json
+	jq --raw-output 'unique_by(.author)[] | "AUTH_ENDPOINTS := $$(AUTH_ENDPOINTS) \( .author | gsub("\\(.+\\)$$"; "") | gsub("[^a-zA-Z]+"; "_") | gsub("_$$"; "") ).json"' $< | tee $@
 
 .PRECIOUS: %.html %/index.html
 
