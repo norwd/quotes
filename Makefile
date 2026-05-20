@@ -65,14 +65,17 @@ humans.md:
 	echo >> $@
 	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
-changelog.md:
+releases.json:
+	curl --fail --output $@ '$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases'
+
+changelog.md: releases.json
 	echo "" > $@
 	echo "---" >> $@
 	echo "lang: en" >> $@
 	echo "title: Changelog" >> $@
 	echo "..." >> $@
 	echo >> $@
-	curl -sSL --fail --output - '$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases' | jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' | tee -a $@
+	jq --raw-output '.[]|"## [\(.name)](\(.html_url))\n\n\(.body)\n"' $< | tee -a $@
 
 $(OID_ENDPOINTS): %.json : data/quotes.json
 	jq --raw-output '.[] | select(._id["$$oid"] == "$*") | { text: .text, author: .author }' $< > $@
