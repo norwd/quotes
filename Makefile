@@ -59,14 +59,14 @@ contributing.md: CONTRIBUTING.md
 humans.md:
 	echo "# Humans to Thank" > $@
 	echo >> $@
-	echo "A huge thanks to all and colaborators who have contributed on GitHub!" | tee -a $@
+	echo "A huge thanks to all and colaborators who have contributed!" | tee -a $@
 	echo >> $@
 	echo "## Contributors to [$${FORGEJO_REPOSITORY}]($${FORGEJO_SERVER_URL}/$${FORGEJO_REPOSITORY})" | tee -a $@
 	echo >> $@
 	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
 releases.json:
-	curl -X 'GET' -H 'accept: application/json' --fail --output $@ 'https://codeberg.org/api/v1/repos/$${FORGEJO_REPOSITORY}/releases'
+	curl -X 'GET' -H 'accept: application/json' --fail --output $@ "$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases"
 
 changelog.md: releases.json
 	echo "" > $@
