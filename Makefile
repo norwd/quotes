@@ -5,7 +5,7 @@ include AUTH_ENDPOINTS.mk
 # ensure this is (re)evaluated last
 include config.mk
 
-all: $(ENDPOINTS) code-of-conduct.txt contributing.txt robots.txt security.txt sitemap.txt version.txt authors.yaml
+all: sitemap.txt
 
 clean:
 	rm -f $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
