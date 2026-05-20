@@ -1,7 +1,7 @@
 #!/usr/bin/env -S make -f
 
-include OID_ENDPOINTS.mk
-include AUTH_ENDPOINTS.mk
+#include OID_ENDPOINTS.mk
+#include AUTH_ENDPOINTS.mk
 # ensure this is (re)evaluated last
 include config.mk
 
@@ -66,7 +66,7 @@ humans.md:
 	git log --pretty='%aN (%aE)' | sort --unique | grep -v '\[bot\]' | awk '{ print "- " $$0 }' | tee -a $@
 
 releases.json:
-	curl --fail --output $@ '$${FORGEJO_SERVER_URL}/api/v1/repos/$${FORGEJO_REPOSITORY}/releases'
+	curl -X 'GET' -H 'accept: application/json' --fail --output $@ 'https://codeberg.org/api/v1/repos/norwd/quotes/releases'
 
 changelog.md: releases.json
 	echo "" > $@
