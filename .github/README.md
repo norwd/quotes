@@ -4,8 +4,9 @@
 
 Visit: [norwd.codeberg.page/quotes](https://norwd.codeberg.page/quotes)
 
-Repo: [codeberg.org/norwd/quotes](https://codeberg.org//norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
+Repo: [codeberg.org/norwd/quotes](https://codeberg.org/norwd/quotes) (forked from [github.com/mudroljub/programming-quotes-api](https://github.com/mudroljub/programming-quotes-api))
 
+This is a *read-only mirror*, PRs must be created on [CodeBerg](https://codeberg.org/norwd/quotes).
 Feel free to get involved, suggest or implement new features.
 
 ## API Documentation
