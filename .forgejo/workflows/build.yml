@@ -2,10 +2,12 @@ name: "Build CodeBerg Pages"
 run-name: "Build CodeBerg Pages"
 
 on:
-  workflow_call:
-  workflow_dispatch:
   push:
-  #  branches-ignore: [main,master]
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: '5 0 * * *'
 
 permissions:
   contents: read
