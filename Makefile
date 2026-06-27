@@ -1,5 +1,10 @@
 #!/usr/bin/env -S make -f
 
+#
+# SPDX-FileCopyrightText: 2026 Y. Meyer-Norwood <norwd@noreply.codeberg.org>
+# SPDX-License-Identifier: LicenseRef-Hippocratic-3.0-CL-ECO-LAW-MIL-SV
+#
+
 include OID_ENDPOINTS.mk
 include AUTH_ENDPOINTS.mk
 include config.mk # ensure this is (re)evaluated last

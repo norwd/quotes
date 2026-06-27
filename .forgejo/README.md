@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2017 Damjan Pavlica <mudroljub@gmail.com>
+SPDX-FileCopyrightText: 2026 Y. Meyer-Norwood <norwd@noreply.codeberg.org>
+SPDX-License-Identifier: ISC
+-->
+
 # Programming Quotes API
 
 **Programming Quotes API for open source projects.**

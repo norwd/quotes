@@ -1,3 +1,10 @@
+#
+# SPDX-FileCopyrightText: 2026 Y. Meyer-Norwood <norwd@noreply.codeberg.org>
+# SPDX-License-Identifier: LicenseRef-Hippocratic-3.0-CL-ECO-LAW-MIL-SV
+#
+
+---
+
 name: "Deploy GitHub Pages"
 run-name: "Deploy GitHub Pages"
 
@@ -97,3 +104,5 @@ jobs:
 
       - name: "Deploy Pages"
         uses: actions/deploy-pages@v4
+
+...

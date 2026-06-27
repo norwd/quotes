@@ -1,3 +1,10 @@
+#
+# SPDX-FileCopyrightText: 2026 Y. Meyer-Norwood <norwd@noreply.codeberg.org>
+# SPDX-License-Identifier: LicenseRef-Hippocratic-3.0-CL-ECO-LAW-MIL-SV
+#
+
+---
+
 name: "Build GitHub Pages"
 run-name: "Build GitHub Pages"
 
@@ -142,3 +149,5 @@ jobs:
             !.nojekyll
             !.git*/**
             !src/**
+
+...
