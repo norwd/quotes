@@ -11,6 +11,9 @@ concurrency:
   group: ${{ forgejo.workflow_ref }}
   cancel-in-progress: true
 
+env:
+  LAST_COMMIT_BEFORE_FORK: ea2e3db64f9d6af034ad5636a5222dfddfa30e61
+
 jobs:
   linters:
     name: "Run Linters"
@@ -35,6 +38,6 @@ jobs:
         run: |
           reuse lint
           editorconfig-checker --verbose
-          trufflehog git file://. --since-commit main --branch "${FORGEJO_REF_NAME}" --results="verified,unknown" --concurrency="$(nproc)" --no-update --fail
+          trufflehog git file://. --since-commit "${LAST_COMMIT_BEFORE_FORK}" --results="verified,unknown" --concurrency="$(nproc)" --no-update --fail
 
 ...
