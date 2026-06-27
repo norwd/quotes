@@ -35,6 +35,6 @@ jobs:
         run: |
           reuse lint
           editorconfig-checker --verbose
-          echo TODO: trufflehog git file://. --results="verified,unknown" --concurrency="$(nproc)" --no-update --fail
+          trufflehog git file://. --since-commit main --branch "${FORGEJO_REF_NAME}" --results="verified,unknown" --concurrency="$(nproc)" --no-update --fail
 
 ...
