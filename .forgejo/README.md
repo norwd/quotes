@@ -6,6 +6,8 @@ SPDX-License-Identifier: ISC
 
 # Programming Quotes API
 
+[![REUSE status](https://api.reuse.software/badge/codeberg.org/norwd/quotes)](https://api.reuse.software/info/codeberg.org/norwd/quotes)
+
 **Programming Quotes API for open source projects.**
 
 Visit: [norwd.codeberg.page/quotes](https://norwd.codeberg.page/quotes)
